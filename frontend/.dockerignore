@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.github
+coverage
+*.log
+npm-debug.log*
+.DS_Store
+*.pem
+.env*
+.vercel
+tsconfig.tsbuildinfo
+next-env.d.ts
+storybook-static
+docs

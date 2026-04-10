@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eng_backend
+    ports:
+      - "4001:4001"
+    environment:
+      - NODE_ENV=production
+      - PORT=4001
+      - CORS_ORIGIN=http://localhost:3001
+      # Create an .env file in the eng root to populate these, or pass via system environment
+      - N8N_YOUTUBE_CHAT_WEBHOOK_URL=${N8N_YOUTUBE_CHAT_WEBHOOK_URL:-""}
+      - N8N_USERNAME=${N8N_USERNAME:-n8n}
+      - N8N_PASSWORD=${N8N_PASSWORD:-n8n}
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Route frontend requests to the container-to-container backend URL
+        NEXT_PUBLIC_API_URL: "http://localhost:4001"
+    container_name: eng_frontend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    depends_on:
+      - backend
+    restart: unless-stopped
