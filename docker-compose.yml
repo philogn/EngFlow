@@ -11,9 +11,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=4001
-      - CORS_ORIGIN=http://localhost:3001
-      # Create an .env file in the eng root to populate these, or pass via system environment
-      - N8N_YOUTUBE_CHAT_WEBHOOK_URL=${N8N_YOUTUBE_CHAT_WEBHOOK_URL:-""}
+      # Use the URL you type into your browser to see the site
+      - CORS_ORIGIN=${FRONTEND_URL:-http://localhost:3001}
+      # Populated from your local .env file
+      - N8N_YOUTUBE_CHAT_WEBHOOK_URL=${N8N_YOUTUBE_CHAT_WEBHOOK_URL}
       - N8N_USERNAME=${N8N_USERNAME:-n8n}
       - N8N_PASSWORD=${N8N_PASSWORD:-n8n}
     restart: unless-stopped
@@ -23,8 +24,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        # Route frontend requests to the container-to-container backend URL
-        NEXT_PUBLIC_API_URL: "http://localhost:4001"
+        # This MUST be the public URL of your backend that the browser can see
+        NEXT_PUBLIC_API_URL: ${BACKEND_URL:-http://localhost:4001}
     container_name: eng_frontend
     ports:
       - "3001:3001"
